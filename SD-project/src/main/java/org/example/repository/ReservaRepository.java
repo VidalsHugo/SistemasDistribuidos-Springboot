@@ -23,10 +23,10 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     List<Reserva> findBySala(@Param("sala") Sala sala);
 
     @Query("SELECT COUNT(r) > 0 FROM Reserva r WHERE r.sala.nome = :nomeSala AND r.data = :data AND r.hora = :hora")
-    boolean existsBySalaAndDataAndHorario(@Param("nomeSala") String nomeSala, @Param("data") LocalDate data, @Param("hora") LocalTime hora);
+    boolean existsBySalaAndDataAndHorario(@Param("nomeSala") String nomeSala, @Param("data") LocalDate data, @Param("hora") String hora);
 
     @Query("SELECT r FROM Reserva r WHERE r.sala.nome = :sala AND r.data = :data AND r.hora = :hora")
-    Reserva findBySalaAndDataAndHorario(@Param("sala") String sala, @Param("data") LocalDate data, @Param("hora") LocalTime hora);
+    Reserva findBySalaAndDataAndHorario(@Param("sala") String sala, @Param("data") LocalDate data, @Param("hora") String hora);
 
     @Query("SELECT r.usuario FROM Reserva r WHERE r.sala.nome = :nomeSala")
     List<Usuario> findUsuariosBySala(@Param("nomeSala") String nomeSala);
@@ -35,5 +35,5 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     List<Sala> findSalasByUsuario(@Param("nomeUsuario") String nomeUsuario);
 
     @Query(value = "DELETE FROM Reserva r WHERE r.sala.nome = :sala AND r.data = :data AND r.hora = :hora", nativeQuery = true)
-    void deleteReservaBySalaAndDataAndHora(@Param("sala") String sala, @Param("data") LocalDate data, @Param("hora") LocalTime hora);
+    void deleteReservaBySalaAndDataAndHora(@Param("sala") String sala, @Param("data") LocalDate data, @Param("hora") String hora);
 }

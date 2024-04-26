@@ -30,9 +30,9 @@ public class Reserva {
     private Sala sala;
 
     private LocalDate data;
-    private LocalTime hora;
+    private String hora;
 
-    public Reserva(Usuario usuario, Sala sala, LocalDate data, LocalTime hora) {
+    public Reserva(Usuario usuario, Sala sala, LocalDate data, String hora) {
         this.usuario = usuario;
         this.sala = sala;
         this.data = data;
