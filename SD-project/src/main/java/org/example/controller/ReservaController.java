@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.example.dto.SalaDto;
 import org.example.dto.UsuarioDto;
 import org.example.repository.SalaRepository;
@@ -85,7 +86,7 @@ public class ReservaController {
     })
     public ResponseEntity<?> consultarReserva(@Valid @RequestBody ReservaDto reservaDto) {
         if(reservaRepository.existsBySalaAndDataAndHorario(reservaDto.sala(), reservaDto.data(), reservaDto.hora())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(String.format("Sala ocupada: %s, Data: %s, Hora: %s", reservaDto.sala(), reservaDto.data(), reservaDto.hora()));
+            return ResponseEntity.status(HttpStatus.OK).body(String.format("Sala ocupada: %s, Data: %s, Hora: %s", reservaDto.sala(), reservaDto.data(), reservaDto.hora()));
         }else {
             return ResponseEntity.status(HttpStatus.OK).body("Sala não reservada");
         }
@@ -95,7 +96,7 @@ public class ReservaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Nenhum usuario encontrado"),
     })
-    public ResponseEntity<List<Usuario>> consultarReservaSalas(@PathVariable @NotBlank String sala) {
+    public ResponseEntity<List<Usuario>> consultarReservaSalas(@PathVariable String sala) {
         List<Usuario> usuarios = reservaRepository.findUsuariosBySala(sala);
         if(!usuarios.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK).body(usuarios);
@@ -108,7 +109,7 @@ public class ReservaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Nenhuma sala encontrado"),
     })
-    public ResponseEntity<List<Sala>> consultarReservaUsuario(@NotBlank @PathVariable String usuario) {
+    public ResponseEntity<List<Sala>> consultarReservaUsuario(@PathVariable String usuario) {
         List<Sala> salas = reservaRepository.findSalasByUsuario(usuario);
         if(!salas.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK).body(salas);
@@ -116,26 +117,5 @@ public class ReservaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(salas);
         }
     }
-
-    @PostMapping("/cadastrarUsuario")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuario criado com sucesso"),
-    })
-    public ResponseEntity<Usuario> cadastrarUsuario(@Valid @RequestBody UsuarioDto usuarioDto){
-        Usuario usuario = new Usuario();
-        BeanUtils.copyProperties(usuarioDto, usuario);
-        return ResponseEntity.status(HttpStatus.OK).body(usuarioRepository.save(usuario));
-    }
-
-    @PostMapping("/cadastrarSala")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Sala criada com sucesso"),
-    })
-    public ResponseEntity<Sala> cadastrarSala(@Valid @RequestBody SalaDto salaDto){
-        Sala sala = new Sala();
-        BeanUtils.copyProperties(salaDto, sala);
-        return ResponseEntity.status(HttpStatus.OK).body(salaRepository.save(sala));
-    }
-
 }
 
