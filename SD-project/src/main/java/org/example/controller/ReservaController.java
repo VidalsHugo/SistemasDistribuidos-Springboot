@@ -1,4 +1,7 @@
 package org.example.controller;
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -46,7 +49,6 @@ public class ReservaController {
 
         Usuario usuario = usuarioRepository.findByName(reservaDto.usuario());
         Sala sala = salaRepository.findByName(reservaDto.sala());
-
         if(usuario == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: Usuario não encontrado.");
         }
@@ -84,9 +86,11 @@ public class ReservaController {
             @ApiResponse(responseCode = "200", description = "Sala não reservada"),
             @ApiResponse(responseCode = "409", description = "Sala ocupada"),
     })
-    public ResponseEntity<?> consultarReserva(@Valid @RequestBody ReservaDto reservaDto) {
-        if(reservaRepository.existsBySalaAndDataAndHorario(reservaDto.sala(), reservaDto.data(), reservaDto.hora())) {
-            return ResponseEntity.status(HttpStatus.OK).body(String.format("Sala ocupada: %s, Data: %s, Hora: %s", reservaDto.sala(), reservaDto.data(), reservaDto.hora()));
+    public ResponseEntity<?> consultarReserva(@RequestParam String sala,
+                                              @RequestParam LocalDate data,
+                                              @RequestParam String hora) {
+        if(reservaRepository.existsBySalaAndDataAndHorario(sala, data, hora)){
+            return ResponseEntity.status(HttpStatus.OK).body(String.format("Sala ocupada: %s, Data: %s, Hora: %s", sala, data, hora));
         }else {
             return ResponseEntity.status(HttpStatus.OK).body("Sala não reservada");
         }

@@ -30,19 +30,27 @@ public class CadastroController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario criado com sucesso"),
     })
-    public ResponseEntity<Usuario> cadastrarUsuario(@Valid @RequestBody UsuarioDto usuarioDto){
-        Usuario usuario = new Usuario();
-        BeanUtils.copyProperties(usuarioDto, usuario);
-        return ResponseEntity.status(HttpStatus.OK).body(usuarioRepository.save(usuario));
+    public ResponseEntity<?> cadastrarUsuario(@Valid @RequestBody UsuarioDto usuarioDto){
+        if(!usuarioRepository.existsByName(usuarioDto.nome())){
+            Usuario usuario = new Usuario();
+            BeanUtils.copyProperties(usuarioDto, usuario);
+            return ResponseEntity.status(HttpStatus.OK).body(usuarioRepository.save(usuario));
+        } else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro: Usuário já cadastrado!");
+        }
     }
 
     @PostMapping("/cadastrarSala")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Sala criada com sucesso"),
     })
-    public ResponseEntity<Sala> cadastrarSala(@Valid @RequestBody SalaDto salaDto){
-        Sala sala = new Sala();
-        BeanUtils.copyProperties(salaDto, sala);
-        return ResponseEntity.status(HttpStatus.OK).body(salaRepository.save(sala));
+    public ResponseEntity<?> cadastrarSala(@Valid @RequestBody SalaDto salaDto){
+        if(!salaRepository.existsByName(salaDto.nome())){
+            Sala sala = new Sala();
+            BeanUtils.copyProperties(salaDto, sala);
+            return ResponseEntity.status(HttpStatus.OK).body(salaRepository.save(sala));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro: Sala já cadastrado!");
+        }
     }
 }

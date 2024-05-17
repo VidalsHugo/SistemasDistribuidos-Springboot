@@ -10,4 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface SalaRepository extends JpaRepository<Sala, Long> {
     @Query("Select u FROM Sala u WHERE u.nome = :name")
     Sala findByName(@Param("name") String name);
+
+    @Query("SELECT CASE WHEN COUNT(u) > 0 THEN TRUE ELSE FALSE END FROM Sala u WHERE u.nome = :name")
+    Boolean existsByName(@Param("name") String name);
 }
