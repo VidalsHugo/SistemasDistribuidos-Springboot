@@ -79,7 +79,7 @@ public class ReservaController {
         }
     }
 
-    @PostMapping("/consultarReserva")
+    @GetMapping("/consultarReserva")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Sala não reservada"),
             @ApiResponse(responseCode = "409", description = "Sala ocupada"),
